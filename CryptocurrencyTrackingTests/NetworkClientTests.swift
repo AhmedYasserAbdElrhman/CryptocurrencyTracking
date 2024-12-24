@@ -68,4 +68,48 @@ final class URLSessionNetworkClientTests: XCTestCase {
         XCTAssertEqual(result.first?.id, expectedCryptos.first?.id)
         XCTAssertEqual(result.first?.name, expectedCryptos.first?.name)
     }
+    
+    func testPerformRequest_DecodingErrorGET() async {
+        // Given: Invalid JSON structure for GET request (e.g., missing required fields)
+        let invalidJSON = """
+        [
+            {
+                "id": "bitcoin",
+                "symbol": "BTC",
+                "name": "Bitcoin",
+                "image": "image"
+                // Missing "currentPrice"
+            }
+        ]
+        """.data(using: .utf8)!
+        
+        // Define the GET route to be tested
+        let route = Router.fetchCryptocurrencies(vsCurrency: "usd")
+        
+        MockURLProtocol.requestHandler = { request in
+            // Omit URL assertions
+            
+            let response = HTTPURLResponse(url: request.url!,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+            return (response, invalidJSON)
+        }
+        
+        // When & Then
+        do {
+            let _: [Cryptocurrency] = try await networkClient.performRequest(route)
+            XCTFail("Expected decoding error, but request succeeded.")
+        } catch let error as NetworkError {
+            switch error {
+            case .decodingError(_):
+                XCTAssertTrue(true, "Received expected decoding error.")
+            default:
+                XCTFail("Expected decoding error, but got \(error).")
+            }
+        } catch {
+            XCTFail("Expected NetworkError.decodingError, but got \(error).")
+        }
+    }
+
 }
