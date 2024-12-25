@@ -8,5 +8,5 @@
 import Foundation
 
 protocol NetworkClientProtocol {
-    func performRequest<T: Decodable>(_ route: Router) async throws -> T
+    func performRequest<T: Decodable>(_ request: URLRequestConvertible) async throws -> T
 }

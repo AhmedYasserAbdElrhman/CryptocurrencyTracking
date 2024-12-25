@@ -13,7 +13,7 @@ final class RouterTests: XCTestCase {
     func testFetchCryptocurrencies_URLConstruction() throws {
         // Given
         let vsCurrency = "usd"
-        let route = Router.fetchCryptocurrencies(vsCurrency: vsCurrency)
+        let route = NetworkRouter.fetchCryptocurrencies(vsCurrency: vsCurrency)
         
         // When
         let request = try route.asURLRequest()

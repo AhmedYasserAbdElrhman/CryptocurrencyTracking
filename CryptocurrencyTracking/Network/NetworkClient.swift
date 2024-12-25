@@ -16,9 +16,9 @@ class NetworkClient: NetworkClientProtocol {
         self.decoder = decoder
     }
     
-    func performRequest<T: Decodable>(_ route: Router) async throws -> T {
+    func performRequest<T: Decodable>(_ request: URLRequestConvertible) async throws -> T {
         do {
-            let request = try route.asURLRequest()
+            let request = try request.asURLRequest()
             let (data, response) = try await urlSession.data(for: request)
             
             guard let httpResponse = response as? HTTPURLResponse else {

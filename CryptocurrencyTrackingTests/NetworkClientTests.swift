@@ -42,7 +42,7 @@ final class URLSessionNetworkClientTests: XCTestCase {
         let jsonData = try JSONEncoder().encode(expectedCryptos)
         
         // Define the route to be tested
-        let route = Router.fetchCryptocurrencies(vsCurrency: "usd")
+        let route = NetworkRouter.fetchCryptocurrencies(vsCurrency: "usd")
         
         
         MockURLProtocol.requestHandler = { request in
@@ -84,7 +84,7 @@ final class URLSessionNetworkClientTests: XCTestCase {
         """.data(using: .utf8)!
         
         // Define the GET route to be tested
-        let route = Router.fetchCryptocurrencies(vsCurrency: "usd")
+        let route = NetworkRouter.fetchCryptocurrencies(vsCurrency: "usd")
         
         MockURLProtocol.requestHandler = { request in
             // Omit URL assertions

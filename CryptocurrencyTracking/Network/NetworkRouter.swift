@@ -16,7 +16,7 @@ protocol URLRequestConvertible {
     func asURLRequest() throws -> URLRequest
 }
 
-enum Router: URLRequestConvertible {
+enum NetworkRouter: URLRequestConvertible, EndPointType {
     case fetchCryptocurrencies(vsCurrency: String)
     
      var baseURL: URL {
