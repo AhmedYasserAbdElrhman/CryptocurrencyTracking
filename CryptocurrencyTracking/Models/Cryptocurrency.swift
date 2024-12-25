@@ -13,11 +13,11 @@ struct Cryptocurrency: Codable {
     let id, symbol, name: String
     let image: String
     let currentPrice: Double
-    let priceChangePercentage: Double
+    let priceChangePercentage: Double?
     enum CodingKeys: String, CodingKey {
         case id, symbol, name, image
         case currentPrice = "current_price"
-        case priceChangePercentage = "price_change_percentage"
+        case priceChangePercentage = "price_change_percentage_24h"
     }
 }
 extension Cryptocurrency {
