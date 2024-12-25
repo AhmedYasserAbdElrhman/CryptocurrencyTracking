@@ -32,15 +32,15 @@ final class LiveListViewModel: ObservableObject {
         }
     }
     @MainActor
-    func toggleLoading(_ bool: Bool) {
+    private func toggleLoading(_ bool: Bool) {
         isLoading = bool
     }
     @MainActor
-    func setCurrencies(_ currencies: [CurrencyPresentedModel]) {
+    private func setCurrencies(_ currencies: [CurrencyPresentedModel]) {
         self.currencies = currencies
     }
     @MainActor
-    func setError(_ error: Error) {
+    private func setError(_ error: Error) {
         hasError = true
         errorMessage = error.localizedDescription
     }
