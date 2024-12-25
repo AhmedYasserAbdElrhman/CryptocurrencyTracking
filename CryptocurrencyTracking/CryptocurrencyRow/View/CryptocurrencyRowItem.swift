@@ -26,6 +26,9 @@ struct CryptocurrencyRowItem: View {
             Text(currency.name)
                 .font(.headline)
             Spacer()
+            Text(currency.formattedPrice)
+                .font(.subheadline)
+                .foregroundStyle(.green)
             FavoriteButton(isFavorited: .constant(.random()))
         }
     }
