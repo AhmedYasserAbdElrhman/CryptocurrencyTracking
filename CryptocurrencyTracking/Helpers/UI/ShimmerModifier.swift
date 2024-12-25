@@ -137,7 +137,20 @@ public extension View {
             self
         }
     }
-
+    @ViewBuilder func shimmeringRedacted(
+        active: Bool = true,
+        animation: Animation = Shimmer.defaultAnimation,
+        gradient: Gradient = Shimmer.defaultGradient,
+        bandSize: CGFloat = 0.3,
+        mode: Shimmer.Mode = .mask
+    ) -> some View {
+        if active {
+            redacted(reason: .placeholder)
+            modifier(Shimmer(animation: animation, gradient: gradient, bandSize: bandSize, mode: mode))
+        } else {
+            self
+        }
+    }
     /// Adds an animated shimmering effect to any view, typically to show that an operation is in progress.
     /// - Parameters:
     ///   - active: Convenience parameter to conditionally enable the effect. Defaults to `true`.
