@@ -6,23 +6,22 @@
 //
 
 import Foundation
-struct CurrencyPresentedModel: Identifiable {
+struct CurrencyPresentedModel: Identifiable, Equatable {
     let id: String
     let symbol: String
     let name: String
     let imageURL: URL?
     let formattedPrice: String
-    let priceChange: String
+    let priceChange: String?
     init(cryptocurrency: Cryptocurrency) {
         self.id = cryptocurrency.id
         self.symbol = cryptocurrency.symbol.uppercased()
         self.name = cryptocurrency.name
         self.imageURL = URL(string: cryptocurrency.image)
         self.formattedPrice = String(format: "$%.2f", cryptocurrency.currentPrice)
-        self.priceChange = cryptocurrency.priceChangePercentage.formatted(.percent)
+        self.priceChange = cryptocurrency.priceChangePercentage?.formatted(.percent)
     }
 }
-
 extension CurrencyPresentedModel {
     static func dummy() -> Self {
         CurrencyPresentedModel(
