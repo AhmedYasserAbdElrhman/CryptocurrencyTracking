@@ -17,4 +17,31 @@ final class LiveListViewModel: ObservableObject {
     init(fetchCryptocurrencyUseCase: FetchCryptocurrenciesUseCaseProtocol) {
         self.fetchCryptocurrencyUseCase = fetchCryptocurrencyUseCase
     }
+    func viewDidLoad() {
+        Task {
+            do {
+                await toggleLoading(true)
+                let currencies = try await fetchCryptocurrencyUseCase.execute()
+                await toggleLoading(false)
+                await setCurrencies(currencies)
+            } catch {
+                await toggleLoading(false)
+                await setCurrencies([])
+                await setError(error)
+            }
+        }
+    }
+    @MainActor
+    func toggleLoading(_ bool: Bool) {
+        isLoading = bool
+    }
+    @MainActor
+    func setCurrencies(_ currencies: [CurrencyPresentedModel]) {
+        self.currencies = currencies
+    }
+    @MainActor
+    func setError(_ error: Error) {
+        hasError = true
+        errorMessage = error.localizedDescription
+    }
 }
