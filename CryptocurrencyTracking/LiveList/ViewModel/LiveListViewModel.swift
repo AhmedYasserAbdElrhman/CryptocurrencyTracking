@@ -15,7 +15,6 @@ final class LiveListViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var hasError: Bool = false
     @Published var errorMessage: String = ""
-    private var lastRefreshDate: Date? // To store the timestamp of the last refresh
     var currentCurrencies: [CurrencyPresentedModel] {
         if searchText.isEmpty {
             currencies
