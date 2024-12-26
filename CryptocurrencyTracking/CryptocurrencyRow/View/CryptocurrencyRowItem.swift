@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CryptocurrencyRowItem: View {
     let currency: CurrencyPresentedModel
+    var onFavorite: ((Bool) -> Void)?
     var body: some View {
         HStack {
             AsyncImage(url: currency.imageURL) { phase in
@@ -29,7 +30,11 @@ struct CryptocurrencyRowItem: View {
             Text(currency.formattedPrice)
                 .font(.subheadline)
                 .foregroundStyle(.green)
-            FavoriteButton(isFavorited: .constant(.random()))
+            FavoriteButton(isFavorited: Binding(get: {
+                currency.isFavorite
+            }, set: { newValue in
+                onFavorite?(newValue)
+            }))
         }
     }
 }
