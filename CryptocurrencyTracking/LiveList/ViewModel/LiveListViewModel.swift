@@ -15,6 +15,7 @@ final class LiveListViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var hasError: Bool = false
     @Published var errorMessage: String = ""
+    private var lastRefreshDate: Date? // To store the timestamp of the last refresh
     var currentCurrencies: [CurrencyPresentedModel] {
         if searchText.isEmpty {
             currencies
@@ -30,19 +31,38 @@ final class LiveListViewModel: ObservableObject {
     ) {
         self.useCase = useCase
         bindSearchText()
+        startAutoRefresh()
+    }
+    deinit {
+        cancellables.forEach { $0.cancel() }
+    }
+    func fetchCurrencies(showLoading: Bool = false) async {
+        do {
+            if showLoading {
+                await toggleLoading(true)
+            }
+            let currencies = try await useCase.execute()
+            if showLoading {
+                await toggleLoading(false)
+            }
+            await setCurrencies(currencies)
+        } catch {
+            if showLoading {
+                await toggleLoading(false)
+                await setCurrencies([])
+            }
+            await setError(error)
+        }
     }
     func onAppear() {
         Task {
-            do {
-                await toggleLoading(true)
-                let currencies = try await useCase.execute()
-                await toggleLoading(false)
-                await setCurrencies(currencies)
-            } catch {
-                await toggleLoading(false)
-                await setCurrencies([])
-                await setError(error)
-            }
+            await fetchCurrencies(showLoading: true)
+        }
+    }
+
+    func refreshData() {
+        Task {
+            await fetchCurrencies()
         }
     }
     func addToFavorite(_ currency: CurrencyPresentedModel) {
@@ -73,6 +93,15 @@ final class LiveListViewModel: ObservableObject {
             .sink { [weak self] filteredList in
                 guard let self else { return }
                 self.searchCurrencies = filteredList
+            }
+            .store(in: &cancellables)
+    }
+    private func startAutoRefresh() {
+        Timer
+            .publish(every: 30, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.refreshData()
             }
             .store(in: &cancellables)
     }
