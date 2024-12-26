@@ -19,4 +19,8 @@ extension CryptoRepository: CryptoRepositoryProtocol {
         let route = NetworkRouter.fetchCryptocurrencies(vsCurrency: vsCurrency)
         return try await networkClient.performRequest(route)
     }
+    func getDetails(id: String) async throws -> CryptocurrencyDetails {
+        let route = NetworkRouter.getDetails(id: id)
+        return try await networkClient.performRequest(route)
+    }
 }

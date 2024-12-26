@@ -18,7 +18,7 @@ protocol URLRequestConvertible {
 
 enum NetworkRouter: URLRequestConvertible, EndPointType {
     case fetchCryptocurrencies(vsCurrency: String)
-    
+    case getDetails(id: String)
      var baseURL: URL {
         return NetworkConfig.baseURL
     }
@@ -27,12 +27,14 @@ enum NetworkRouter: URLRequestConvertible, EndPointType {
         switch self {
         case .fetchCryptocurrencies:
             return "/coins/markets"
+        case .getDetails(let id):
+            return "/coins/\(id)"
         }
     }
     
      var method: HTTPMethod {
         switch self {
-        case .fetchCryptocurrencies:
+        case .fetchCryptocurrencies, .getDetails:
             return .GET
         }
     }
@@ -54,6 +56,8 @@ enum NetworkRouter: URLRequestConvertible, EndPointType {
                 "vs_currency": vsCurrency,
                 "order": "market_cap_desc",
             ]
+        case .getDetails:
+            return nil
         }
     }
     

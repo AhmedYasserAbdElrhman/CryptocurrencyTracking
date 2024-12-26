@@ -8,4 +8,5 @@
 
 protocol CryptoRepositoryProtocol {
     func fetchCryptocurrencies(vsCurrency: String) async throws -> [Cryptocurrency]
+    func getDetails(id: String) async throws -> CryptocurrencyDetails
 }
