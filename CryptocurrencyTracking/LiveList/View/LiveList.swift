@@ -19,8 +19,7 @@ struct LiveList: View {
                     HStack {
                         SearchField(searchText: $viewModel.searchText)
                         NavigationLink(
-                            destination: FavoritesView(
-                                favorites: viewModel.currencies)
+                            destination: FavoritesView()
                         ) {
                             Image(systemName: "heart.circle.fill")
                                 .foregroundColor(.red)
@@ -36,14 +35,17 @@ struct LiveList: View {
                         },
                         removeFromFavorite: { currency in
                             viewModel.deleteFavorite(currency)
+                        }, onError: { errorMessage in
+                            viewModel.errorMessage = errorMessage
+                            viewModel.hasError = true
                         }
                     )
                     .padding()
                     .shimmeringRedacted(active: viewModel.isLoading)
                 }
             }
-            .onFirstAppear {
-                viewModel.viewDidLoad()
+            .onAppear {
+                viewModel.onAppear()
             }
             .toast(isShowing: $viewModel.hasError,message: viewModel.errorMessage, type: .error)
             .navigationBarTitle("Live List", displayMode: .large)

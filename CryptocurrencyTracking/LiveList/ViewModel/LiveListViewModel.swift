@@ -25,19 +25,13 @@ final class LiveListViewModel: ObservableObject {
     // MARK: - Variables
     private var cancellables: Set<AnyCancellable> = []
     private let useCase: FetchCryptocurrenciesUseCaseProtocol
-    private let addFavoriteUseCase: AddFavoriteUseCaseProtocol
-    private let deleteFavoriteUseCase: DeleteFavoriteUseCaseProtocol
     init(
-        useCase: FetchCryptocurrenciesUseCaseProtocol,
-        addFavoriteUseCase: AddFavoriteUseCaseProtocol,
-        deleteFavoriteUseCase: DeleteFavoriteUseCaseProtocol
+        useCase: FetchCryptocurrenciesUseCaseProtocol
     ) {
         self.useCase = useCase
-        self.addFavoriteUseCase = addFavoriteUseCase
-        self.deleteFavoriteUseCase = deleteFavoriteUseCase
         bindSearchText()
     }
-    func viewDidLoad() {
+    func onAppear() {
         Task {
             do {
                 await toggleLoading(true)
@@ -53,22 +47,12 @@ final class LiveListViewModel: ObservableObject {
     }
     func addToFavorite(_ currency: CurrencyPresentedModel) {
         Task {
-            do {
-                try addFavoriteUseCase.execute(currency: currency)
-                await updateFavorite(for: currency.id, isFavorite: true)
-            } catch {
-                await setError(error)
-            }
+            await updateFavorite(for: currency.id, isFavorite: true)
         }
     }
     func deleteFavorite(_ currency: CurrencyPresentedModel) {
         Task {
-            do {
-                try deleteFavoriteUseCase.execute(id: currency.id)
-                await updateFavorite(for: currency.id, isFavorite: false)
-            } catch {
-                await setError(error)
-            }
+            await updateFavorite(for: currency.id, isFavorite: false)
         }
     }
     // MARK: - Functions
