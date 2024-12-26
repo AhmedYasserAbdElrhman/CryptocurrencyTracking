@@ -6,8 +6,17 @@
 //
 
 import Foundation
+final class FetchCryptocurrenciesUseCase {
+    private let repository: CryptoRepositoryProtocol
+    private let isFavoriteUseCase: IsFavoriteUseCaseProtocol
+    init(repository: CryptoRepositoryProtocol, isFavoriteUseCase: IsFavoriteUseCaseProtocol) {
+        self.repository = repository
+        self.isFavoriteUseCase = isFavoriteUseCase
+    }
+
+}
 // MARK: - FetchCryptocurrenciesUseCaseProtocol
-extension CryptocurrenciesUseCase: FetchCryptocurrenciesUseCaseProtocol {
+extension FetchCryptocurrenciesUseCase: FetchCryptocurrenciesUseCaseProtocol {
     func execute() async throws -> [CurrencyPresentedModel] {
         let dtos = try await repository.fetchCryptocurrencies(vsCurrency: "usd")
         return dtos.map { currency in
