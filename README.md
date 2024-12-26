@@ -53,3 +53,7 @@ A simple, **SwiftUI**-based iOS application that uses the [CoinGecko](https://ww
 
 ### Details View
 <img src="https://res.cloudinary.com/dpa6yfqps/image/upload/v1735223703/w6gqvcifbycuvdoei698.png" alt="Details View" width="400"/>
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
