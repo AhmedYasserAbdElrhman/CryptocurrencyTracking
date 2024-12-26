@@ -25,8 +25,16 @@ final class LiveListViewModel: ObservableObject {
     // MARK: - Variables
     private var cancellables: Set<AnyCancellable> = []
     private let useCase: FetchCryptocurrenciesUseCaseProtocol
-    init(useCase: FetchCryptocurrenciesUseCaseProtocol) {
+    private let addFavoriteUseCase: AddFavoriteUseCaseProtocol
+    private let deleteFavoriteUseCase: DeleteFavoriteUseCaseProtocol
+    init(
+        useCase: FetchCryptocurrenciesUseCaseProtocol,
+        addFavoriteUseCase: AddFavoriteUseCaseProtocol,
+        deleteFavoriteUseCase: DeleteFavoriteUseCaseProtocol
+    ) {
         self.useCase = useCase
+        self.addFavoriteUseCase = addFavoriteUseCase
+        self.deleteFavoriteUseCase = deleteFavoriteUseCase
         bindSearchText()
     }
     func viewDidLoad() {

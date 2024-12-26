@@ -10,6 +10,9 @@ import Foundation
 extension CryptocurrenciesUseCase: FetchCryptocurrenciesUseCaseProtocol {
     func execute() async throws -> [CurrencyPresentedModel] {
         let dtos = try await repository.fetchCryptocurrencies(vsCurrency: "usd")
-        return mapper.map(from: dtos)
+        return dtos.map { currency in
+            let isFavorite = isFavoriteUseCase.isFavorite(for: currency.id)
+            return CurrencyPresentedModel(cryptocurrency: currency, isFavorite: isFavorite)
+        }
     }
 }

@@ -8,10 +8,9 @@
 import Foundation
 final class CryptocurrenciesUseCase {
     let repository: CryptoRepositoryProtocol
-    let mapper: CryptocurrencyMapperProtocol
-
-    init(repository: CryptoRepositoryProtocol, mapper: CryptocurrencyMapperProtocol) {
+    let isFavoriteUseCase: IsFavoriteUseCaseProtocol
+    init(repository: CryptoRepositoryProtocol, isFavoriteUseCase: IsFavoriteUseCaseProtocol) {
         self.repository = repository
-        self.mapper = mapper
+        self.isFavoriteUseCase = isFavoriteUseCase
     }
 }
