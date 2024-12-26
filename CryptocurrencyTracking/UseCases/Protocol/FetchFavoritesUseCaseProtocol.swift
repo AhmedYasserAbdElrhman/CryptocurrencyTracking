@@ -7,5 +7,5 @@
 
 
 protocol FetchFavoritesUseCaseProtocol {
-    func execute() throws -> [FavoriteCurrency]
+    func execute() throws -> [CurrencyPresentedModel]
 }

@@ -13,7 +13,8 @@ final class FetchFavoritesUseCase: FetchFavoritesUseCaseProtocol {
         self.favoritesRepository = favoritesRepository
     }
     
-    func execute() throws -> [FavoriteCurrency] {
-        return try favoritesRepository.fetchFavorites()
+    func execute() throws -> [CurrencyPresentedModel] {
+        let favorites = try favoritesRepository.fetchFavorites()
+        return favorites.map { .init(favorite: $0) }
     }
 }
