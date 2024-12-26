@@ -5,27 +5,79 @@ A simple, **SwiftUI**-based iOS application that uses the [CoinGecko](https://ww
 ## Table of Contents
 
 - [Features](#features)
+- [Architecture](#architecture)
+- [Factory Pattern](#factory-pattern)
 - [Setup](#setup)
-- [Usage](#usage)
 - [Screenshots](#screenshots)
 
 ## Features
 
-1. **Live List**  
-   Display real-time cryptocurrency prices and details fetched from CoinGecko.
+1. **Live Cryptocurrency List**  
+   - View real-time cryptocurrency prices and market trends fetched from the CoinGecko API.
 
-2. **Details View**  
-   Get more in-depth information for a selected cryptocurrency, including price changes over time.
+2. **Detailed Cryptocurrency View**  
+   - Access detailed information about individual cryptocurrencies, including historical price changes.
 
-3. **Favorites**  
-   Mark cryptocurrencies as favorite, persist them using Core Data, and view your collection in a Favorites tab.
+3. **Favorites Management**  
+   - Mark cryptocurrencies as favorites, with data persistently stored using **Core Data**.
 
-4. **SwiftUI UI Components**  
-   All views and UI elements are built with SwiftUI, leveraging modern design patterns.
+4. **Modern SwiftUI UI**  
+   - Designed with SwiftUI for responsive, declarative, and elegant user interfaces.
 
-5. **Modular Architecture**  
-   The app separates networking, data storage, and domain logic with a clean structure.
+5. **Clean Modular Architecture**  
+   - Separation of concerns with View, ViewModel, Use Case, Repository, and Network layers.
 
+## Architecture
+
+The app follows a clean architecture pattern for scalability and maintainability:
+
+### Flow:
+- **View → ViewModel → Use Case → Repository → Network/Database**
+
+1. **View**:  
+   - Built using **SwiftUI**, the views display data provided by the ViewModels.
+   
+2. **ViewModel**:  
+   - Handles business logic and interacts with Use Cases. Observed by the View to update the UI reactively.
+
+3. **Use Case**:  
+   - Encapsulates application-specific logic. Fetches data from repositories and processes it for the ViewModel.
+
+4. **Repository**:  
+   - Mediates between the data layer (Network/Database) and the Use Case layer. Ensures data consistency regardless of the source.
+
+5. **Network/Database**:  
+   - **NetworkClient** handles API requests and responses.  
+   - **Core Data** is used for persistent storage of user favorites.
+
+---
+## Factory Pattern
+
+The app leverages the **Factory Pattern** to create ViewModels efficiently and decouple dependencies.
+
+### Factory Protocol:
+```swift
+protocol ViewModelFactory {
+    func makeLiveListViewModel() -> LiveListViewModel
+    func makeCurrencyListViewModel() -> CurrencyListViewModel
+    func makeDetailViewModel(with id: String) -> CurrencyDetailsViewModel
+    func makeFavoritesViewModel() -> FavoritesViewModel
+}
+```
+### Default Implementation:
+```swift
+struct DefaultViewModelFactory: ViewModelFactory {
+    func makeLiveListViewModel() -> LiveListViewModel {
+        let networkClient: NetworkClientProtocol = NetworkClient()
+        let repository: CryptoRepositoryProtocol = CryptoRepository(networkClient: networkClient)
+        let favoritesStorage: FavoritesRepositoryProtocol = FavoritesStorage()
+        let isFavoriteUseCase: IsFavoriteUseCaseProtocol = IsFavoriteUseCase(favoritesRepository: favoritesStorage)
+        let useCase: FetchCryptocurrenciesUseCaseProtocol = FetchCryptocurrenciesUseCase(repository: repository, isFavoriteUseCase: isFavoriteUseCase)
+        return LiveListViewModel(useCase: useCase)
+    }
+    // Additional factory methods for other ViewModels...
+}
+```
 ## Setup
 
 1. **Clone the repository**  
