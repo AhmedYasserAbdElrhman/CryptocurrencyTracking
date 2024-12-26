@@ -51,6 +51,26 @@ final class LiveListViewModel: ObservableObject {
             }
         }
     }
+    func addToFavorite(_ currency: CurrencyPresentedModel) {
+        Task {
+            do {
+                try addFavoriteUseCase.execute(currency: currency)
+                await updateFavorite(for: currency.id, isFavorite: true)
+            } catch {
+                await setError(error)
+            }
+        }
+    }
+    func deleteFavorite(_ currency: CurrencyPresentedModel) {
+        Task {
+            do {
+                try deleteFavoriteUseCase.execute(id: currency.id)
+                await updateFavorite(for: currency.id, isFavorite: false)
+            } catch {
+                await setError(error)
+            }
+        }
+    }
     // MARK: - Functions
     private func bindSearchText() {
         Publishers.CombineLatest($searchText, $currencies)
@@ -71,6 +91,13 @@ final class LiveListViewModel: ObservableObject {
                 self.searchCurrencies = filteredList
             }
             .store(in: &cancellables)
+    }
+    @MainActor
+    private func updateFavorite(for id: String, isFavorite: Bool) {
+        // Update the source of truth directly
+        if let index = currencies.firstIndex(where: { $0.id == id }) {
+            currencies[index].isFavorite = isFavorite
+        }
     }
     @MainActor
     private func toggleLoading(_ bool: Bool) {

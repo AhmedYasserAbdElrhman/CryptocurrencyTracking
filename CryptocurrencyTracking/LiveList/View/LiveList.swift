@@ -29,9 +29,17 @@ struct LiveList: View {
                     }
                     .padding(.horizontal, 16)
                     .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-                    CurrencyList(currencies: viewModel.currentCurrencies)
-                        .padding()
-                        .shimmeringRedacted(active: viewModel.isLoading)
+                    CurrencyList(
+                        currencies: viewModel.currentCurrencies,
+                        addToFavorite: { currency in
+                            viewModel.addToFavorite(currency)
+                        },
+                        removeFromFavorite: { currency in
+                            viewModel.deleteFavorite(currency)
+                        }
+                    )
+                    .padding()
+                    .shimmeringRedacted(active: viewModel.isLoading)
                 }
             }
             .onFirstAppear {
