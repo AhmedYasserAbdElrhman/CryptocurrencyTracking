@@ -31,6 +31,7 @@ class NetworkClient: NetworkClientProtocol {
                     let decodedData = try decoder.decode(T.self, from: data)
                     return decodedData
                 } catch {
+                    print("This Json had a decodingError: \(error)", String(data: data, encoding: .utf8)!)
                     throw NetworkError.decodingError(error)
                 }
             case 429:
